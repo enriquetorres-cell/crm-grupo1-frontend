@@ -45,4 +45,4 @@ configura la reescritura de SPA y al final imprime la URL pública `https://main
 
 - Los listados de DynamoDB (leads, actividades, usuarios) usan cursor (`siguiente`). Con filtros, DynamoDB
   aplica el `limit` antes del filtro, así que `src/api.ts` (`paginaCursor`) sigue el cursor hasta juntar resultados.
-- El enlace al documento de una cotización (URL firmada de S3, 1 hora) se muestra al crearla.
+- Cada cotización trae el enlace a su documento HTML en S3 (URL firmada por MS4, válida 1 hora).

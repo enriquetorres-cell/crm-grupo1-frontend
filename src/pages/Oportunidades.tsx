@@ -354,8 +354,8 @@ function DetalleOportunidad({
                   </div>
                   <div className="flex items-center gap-2">
                     <Insignia valor={c.estado} />
-                    {documentos[c.id] && (
-                      <a href={documentos[c.id]} target="_blank" rel="noreferrer" className="text-xs text-marca-600 hover:underline">
+                    {(c.documento_url || documentos[c.id]) && (
+                      <a href={c.documento_url || documentos[c.id]} target="_blank" rel="noreferrer" className="text-xs text-marca-600 hover:underline">
                         Ver documento
                       </a>
                     )}

@@ -103,7 +103,7 @@ export interface Cotizacion {
   total: number
   vence_en: string
   documento_key: string | null
-  documento_url?: string
+  documento_url?: string | null
   creado_por: string | null
   creado_en: string
 }
