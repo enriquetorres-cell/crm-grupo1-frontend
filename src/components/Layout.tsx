@@ -22,7 +22,7 @@ export default function Layout() {
 
   const navegacion = (
     <nav className="space-y-0.5">
-      {enlaces.map((m) => (
+      {[...enlaces, { ruta: '/docs', texto: 'API (Swagger)', icono: '⌘' }].map((m) => (
         <NavLink
           key={m.ruta}
           to={m.ruta}

@@ -44,6 +44,17 @@ export default function Agenda() {
     }
   }
 
+  const eliminar = async (a: Actividad) => {
+    if (!confirm(`¿Eliminar "${a.titulo}"?`)) return
+    setError('')
+    try {
+      await api('ms5', `/ms5/actividades/${a.actividad_id}`, { metodo: 'DELETE' })
+      setActividades((xs) => xs.filter((x) => x.actividad_id !== a.actividad_id))
+    } catch (e) {
+      setError(mensajeError(e))
+    }
+  }
+
   const ordenadas = [...actividades].sort((a, b) => {
     const fa = a.inicio || a.vence_en || ''
     const fb = b.inicio || b.vence_en || ''
@@ -90,6 +101,11 @@ export default function Agenda() {
                       Cancelar
                     </Boton>
                   </div>
+                )}
+                {a.estado !== 'completada' && (
+                  <button onClick={() => eliminar(a)} className="rounded p-1 text-slate-400 hover:bg-red-50 hover:text-red-600" title="Eliminar" aria-label="Eliminar">
+                    🗑
+                  </button>
                 )}
               </li>
             ))}

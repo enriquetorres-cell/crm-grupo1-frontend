@@ -113,7 +113,17 @@ export default function Leads() {
 
       <NuevoLead abierto={nuevo} onCerrar={() => setNuevo(false)} onCreado={(l) => setLeads((ls) => [l, ...ls])} />
       <ImportarCsv abierto={importar} onCerrar={() => setImportar(false)} onTerminado={() => cargar()} />
-      {elegido && <DetalleLead lead={elegido} onCerrar={() => setElegido(null)} onCambio={actualizado} />}
+      {elegido && (
+        <DetalleLead
+          lead={elegido}
+          onCerrar={() => setElegido(null)}
+          onCambio={actualizado}
+          onEliminado={(id) => {
+            setLeads((ls) => ls.filter((x) => x.lead_id !== id))
+            setElegido(null)
+          }}
+        />
+      )}
     </>
   )
 }
@@ -173,7 +183,17 @@ function NuevoLead({ abierto, onCerrar, onCreado }: { abierto: boolean; onCerrar
   )
 }
 
-function DetalleLead({ lead, onCerrar, onCambio }: { lead: Lead; onCerrar: () => void; onCambio: (l: Lead) => void }) {
+function DetalleLead({
+  lead,
+  onCerrar,
+  onCambio,
+  onEliminado,
+}: {
+  lead: Lead
+  onCerrar: () => void
+  onCambio: (l: Lead) => void
+  onEliminado: (id: string) => void
+}) {
   const [historial, setHistorial] = useState<EntradaHistorial[] | null>(null)
   const [motivo, setMotivo] = useState('')
   const [error, setError] = useState('')
@@ -210,6 +230,19 @@ function DetalleLead({ lead, onCerrar, onCambio }: { lead: Lead; onCerrar: () =>
       'Lead convertido: el evento lead.convertido crea la cuenta (MS2), la oportunidad (MS4) y el historial (MS5) en unos segundos.',
     )
 
+  const eliminar = async () => {
+    if (!confirm(`¿Eliminar el lead de ${lead.empresa}? Se borran también sus marcas de email y teléfono.`)) return
+    setError('')
+    setOcupado('eliminar')
+    try {
+      await api('ms3', `/ms3/leads/${lead.lead_id}`, { metodo: 'DELETE' })
+      onEliminado(lead.lead_id)
+    } catch (e) {
+      setError(mensajeError(e))
+      setOcupado('')
+    }
+  }
+
   const datos: [string, string][] = [
     ['Contacto', [lead.nombre, lead.apellido].filter(Boolean).join(' ') || '—'],
     ['Cargo', lead.cargo || '—'],
@@ -230,6 +263,11 @@ function DetalleLead({ lead, onCerrar, onCambio }: { lead: Lead; onCerrar: () =>
           <Insignia valor={lead.estado} />
           <Insignia valor={lead.temperatura} texto={`${lead.puntaje} pts · ${lead.temperatura}`} />
           <span className="text-xs text-slate-400">{lead.lead_id}</span>
+          {lead.estado !== 'convertido' && (
+            <Boton variante="fantasma" className="ml-auto px-2 py-1 text-xs text-red-600 hover:bg-red-50" cargando={ocupado === 'eliminar'} onClick={eliminar}>
+              Eliminar lead
+            </Boton>
+          )}
         </div>
         {error && <Alerta>{error}</Alerta>}
         {ok && <Alerta tipo="ok">{ok}</Alerta>}

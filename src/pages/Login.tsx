@@ -61,6 +61,10 @@ export default function Login() {
             <Link to="/registro" className="font-medium text-marca-600 hover:underline">
               Regístrala
             </Link>
+            {' · '}
+            <Link to="/docs" className="font-medium text-marca-600 hover:underline">
+              API (Swagger)
+            </Link>
           </p>
         </form>
         <div className="mt-4 rounded-xl bg-white/10 p-3 text-xs text-marca-50">

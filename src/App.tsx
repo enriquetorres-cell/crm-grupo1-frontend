@@ -3,6 +3,7 @@ import Layout from './components/Layout'
 import { FALTAN_URLS } from './config'
 import Agenda from './pages/Agenda'
 import CuentaDetalle from './pages/CuentaDetalle'
+import Docs from './pages/Docs'
 import Cuentas from './pages/Cuentas'
 import Leads from './pages/Leads'
 import Login from './pages/Login'
@@ -36,6 +37,7 @@ export default function App() {
     <Routes>
       <Route path="/login" element={<Login />} />
       <Route path="/registro" element={<Registro />} />
+      <Route path="/docs" element={<Docs />} />
       <Route
         element={
           <Protegida>
