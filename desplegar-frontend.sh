@@ -33,7 +33,10 @@ done
 cat .env.production
 
 echo -e "\n=== Build ==="
-if [ ! -d node_modules ]; then npm ci --no-fund --no-audit; fi
+# Reinstala si no hay dependencias o si package-lock.json cambió (por ejemplo, tras un git pull con una librería nueva).
+if [ ! -f node_modules/.package-lock.json ] || [ package-lock.json -nt node_modules/.package-lock.json ]; then
+  npm ci --no-fund --no-audit
+fi
 npm run build
 
 echo -e "\n=== Empaquetar dist/ ==="
